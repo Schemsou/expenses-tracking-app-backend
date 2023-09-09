@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { SignupDto } from './dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IUser } from 'src/users/schemas/UserInterface';
-import { User } from 'src/users/schemas/user.schema';
+import { IUser } from 'src/auth/schemas/UserInterface';
+import { User } from 'src/auth/schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 @Injectable()
