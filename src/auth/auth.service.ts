@@ -22,7 +22,7 @@ export class AuthService {
       firstName,
       lastName,
       email,
-      hashedPassword,
+      password: hashedPassword,
       phone,
     });
 
@@ -35,12 +35,18 @@ export class AuthService {
 
     const user = await this.userModel.findOne({ email });
 
-    if (!user) throw new UnauthorizedException('Invalid Credentiels');
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
 
-    const passwordMatched = await bcrypt.compare(password, user.password);
-    if (!passwordMatched)
-      throw new UnauthorizedException('Invalid Credentiels');
+    const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordMatched) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
     const token = this.jwtService.sign({ id: user._id });
+
     return { token };
   }
 }
