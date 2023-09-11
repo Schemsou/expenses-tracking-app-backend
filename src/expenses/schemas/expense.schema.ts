@@ -5,10 +5,12 @@ import {
   IsEnum,
   IsOptional,
 } from 'class-validator';
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ExpenseCategory } from '../dto';
+import { Document } from 'mongoose';
 
-export class Expense {
+@Schema({ timestamps: true })
+export class Expense extends Document {
   @Prop()
   @IsString()
   title: string;

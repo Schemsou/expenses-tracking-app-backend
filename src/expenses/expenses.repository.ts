@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Expense } from './schemas/expense.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
+import { User } from 'src/auth/schemas/user.schema';
 
 @Injectable()
 export class ExpenseRepository {
@@ -28,7 +29,10 @@ export class ExpenseRepository {
 
   async create(expense: Expense): Promise<Expense> {
     const newExpense = new this.expenseModel(expense);
-    console.log(newExpense);
     return newExpense.save();
+  }
+
+  async delete(expenseFilterQuery: FilterQuery<Expense>): Promise<Expense> {
+    return this.expenseModel.findOneAndDelete(expenseFilterQuery);
   }
 }

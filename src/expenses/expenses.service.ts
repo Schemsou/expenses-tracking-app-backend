@@ -1,26 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { ExpenseRepository } from './expenses.repository';
 import { Expense } from './schemas/expense.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { CreateExpenseDto } from './dto';
 
 @Injectable()
 export class ExpensesService {
-  constructor(private readonly expensesRepository: ExpenseRepository) {}
+  constructor(
+    private readonly expensesRepository: ExpenseRepository,
+    @InjectModel(Expense.name)
+    private expenseModel: Model<Expense>,
+  ) {}
 
-  async createExpense(
-    title: string,
-    amount: number,
-    date: Date,
-    category: string,
-    description: string,
-  ): Promise<Expense> {
-    const createdExpense = await this.expensesRepository.create({
-      title,
-      amount,
-      date,
-      category,
-      description,
-    });
-    return createdExpense;
+  async createExpense(createExpenseDto: any): Promise<Expense> {
+    const expense = this.expensesRepository.create(createExpenseDto);
+    return expense;
   }
 
   async findAll(): Promise<Expense[]> {
@@ -34,5 +29,12 @@ export class ExpensesService {
     } catch (error) {
       throw new error();
     }
+  }
+
+  async deleteExpense(expenseId: string): Promise<Expense> {
+    try {
+      const expense = await this.expensesRepository.delete({ _id: expenseId });
+      return expense;
+    } catch (error) {}
   }
 }
