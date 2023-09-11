@@ -46,4 +46,21 @@ export class ExpensesService {
     const expenses = await this.expensesRepository.findAll({ user: userId });
     return expenses.reduce((acc, curr) => acc + curr.amount, 0);
   }
+
+  async getTotalExpensesPerMonth(
+    userId: string,
+    year: number,
+    month: number,
+  ): Promise<number> {
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0);
+
+    const expenses = await this.expensesRepository.findAll({
+      user: userId,
+      date: { $gte: startDate, $lte: endDate },
+    });
+
+    const totalAmount = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+    return totalAmount;
+  }
 }
