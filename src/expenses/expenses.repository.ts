@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Expense } from './schemas/expense.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
-import { User } from 'src/auth/schemas/user.schema';
 
 @Injectable()
 export class ExpenseRepository {

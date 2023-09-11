@@ -4,10 +4,12 @@ import {
   IsDate,
   IsEnum,
   IsOptional,
+  IsEmpty,
 } from 'class-validator';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ExpenseCategory } from '../dto';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+import { User } from 'src/auth/schemas/user.schema';
 
 @Schema({ timestamps: true })
 export class Expense extends Document {
@@ -33,5 +35,9 @@ export class Expense extends Document {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @IsEmpty()
+  user: User;
 }
 export const ExpenseSchema = SchemaFactory.createForClass(Expense);

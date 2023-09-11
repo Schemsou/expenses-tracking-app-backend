@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { Expense } from './schemas/expense.schema';
@@ -20,9 +21,12 @@ export class ExpensesController {
   @Post('add')
   async addExpense(
     @Body() createExpenseDto: CreateExpenseDto,
+    @Req() req,
   ): Promise<Expense> {
-    const createdExpense =
-      await this.expenseService.createExpense(createExpenseDto);
+    const createdExpense = await this.expenseService.createExpense(
+      createExpenseDto,
+      req.user,
+    );
     return createdExpense;
   }
 

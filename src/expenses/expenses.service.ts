@@ -4,6 +4,7 @@ import { Expense } from './schemas/expense.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateExpenseDto } from './dto';
+import { User } from 'src/auth/schemas/user.schema';
 
 @Injectable()
 export class ExpensesService {
@@ -13,8 +14,9 @@ export class ExpensesService {
     private expenseModel: Model<Expense>,
   ) {}
 
-  async createExpense(createExpenseDto: any): Promise<Expense> {
-    const expense = this.expensesRepository.create(createExpenseDto);
+  async createExpense(createExpenseDto: any, user: User): Promise<Expense> {
+    const data = Object.assign(createExpenseDto, { user: user._id });
+    const expense = this.expensesRepository.create(data);
     return expense;
   }
 

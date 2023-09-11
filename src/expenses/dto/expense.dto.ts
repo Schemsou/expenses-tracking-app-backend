@@ -5,6 +5,7 @@ import {
   IsEnum,
   IsOptional,
   ValidateIf,
+  IsEmpty,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -37,4 +38,9 @@ export class CreateExpenseDto {
   @IsString()
   @ValidateIf((dto) => dto.category === 'Other')
   description?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsEmpty()
+  user?: string;
 }
