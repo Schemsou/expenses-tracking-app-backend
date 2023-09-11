@@ -26,4 +26,13 @@ export class ExpensesService {
   async findAll(): Promise<Expense[]> {
     return this.expensesRepository.findAll({});
   }
+
+  async getExpenseById(expenseId: string): Promise<Expense> {
+    try {
+      const expense = await this.expensesRepository.findOne({ _id: expenseId });
+      return expense;
+    } catch (error) {
+      throw new error();
+    }
+  }
 }

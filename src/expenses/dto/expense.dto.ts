@@ -18,11 +18,9 @@ export enum ExpenseCategory {
 }
 
 export class CreateExpenseDto {
-  @ApiProperty()
   @IsString()
   title: string;
 
-  @ApiProperty()
   @IsNumber()
   amount: number;
 
@@ -31,12 +29,10 @@ export class CreateExpenseDto {
   @IsOptional()
   date?: Date;
 
-  @ApiProperty()
   @IsString()
   @IsEnum(ExpenseCategory)
   category: string;
 
-  @ApiProperty()
   @IsOptional()
   @IsString()
   @ValidateIf((dto) => dto.category === 'Other')

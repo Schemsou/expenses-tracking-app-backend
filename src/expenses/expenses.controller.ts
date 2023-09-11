@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Expense } from './schemas/expense.schema';
 import { ExpensesService } from './expenses.service';
 import { CreateExpenseDto } from './dto/expense.dto';
@@ -23,5 +23,10 @@ export class ExpensesController {
   @Get('all')
   async getExpenses(): Promise<Expense[]> {
     return this.expenseService.findAll();
+  }
+
+  @Get(':expenseId')
+  async getExpense(@Param('expenseId') expenseId: string): Promise<Expense> {
+    return this.expenseService.getExpenseById(expenseId);
   }
 }
