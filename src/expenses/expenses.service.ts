@@ -28,15 +28,22 @@ export class ExpensesService {
     try {
       const expense = await this.expensesRepository.findOne({ _id: expenseId });
       return expense;
-    } catch (error) {
-      throw new error();
-    }
+    } catch {}
   }
 
   async deleteExpense(expenseId: string): Promise<Expense> {
     try {
       const expense = await this.expensesRepository.delete({ _id: expenseId });
       return expense;
-    } catch (error) {}
+    } catch {}
+  }
+
+  async getExpensesByUserId(userId: string): Promise<Expense[]> {
+    return this.expensesRepository.findAll({ user: userId });
+  }
+
+  async getSumExpensesByUserId(userId: string): Promise<number> {
+    const expenses = await this.expensesRepository.findAll({ user: userId });
+    return expenses.reduce((acc, curr) => acc + curr.amount, 0);
   }
 }

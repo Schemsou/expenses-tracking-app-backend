@@ -17,14 +17,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(paylod) {
-    const { id } = paylod;
-
+  async validate(payload) {
+    const { id } = payload;
     const user = await this.userModel.findById(id);
     if (!user) {
       throw new UnauthorizedException('Login first');
     }
-
     return user;
   }
 }
