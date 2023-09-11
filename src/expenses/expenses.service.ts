@@ -63,4 +63,22 @@ export class ExpensesService {
     const totalAmount = expenses.reduce((acc, curr) => acc + curr.amount, 0);
     return totalAmount;
   }
+
+  async getTotalExpensesPerYear(
+    userId: string,
+    year: number,
+  ): Promise<{ [month: number]: number }> {
+    const totalExpensesByMonth: { [month: number]: number } = {};
+
+    for (let month = 1; month <= 12; month++) {
+      const totalAmount = await this.getTotalExpensesPerMonth(
+        userId,
+        year,
+        month,
+      );
+      totalExpensesByMonth[month] = totalAmount;
+    }
+
+    return totalExpensesByMonth;
+  }
 }

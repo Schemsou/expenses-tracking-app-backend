@@ -84,4 +84,15 @@ export class ExpensesController {
       currentMonth,
     );
   }
+  //Getting for each month of the year
+  @UseGuards(AuthGuard())
+  @Get('year/:userId')
+  async getTotalExpensesPerYear(
+    @Param('userId') userId: string,
+  ): Promise<{ [month: number]: number }> {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+
+    return this.expenseService.getTotalExpensesPerYear(userId, currentYear);
+  }
 }
