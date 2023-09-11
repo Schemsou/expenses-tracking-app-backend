@@ -28,6 +28,7 @@ export class ExpenseRepository {
 
   async create(expense: Expense): Promise<Expense> {
     const newExpense = new this.expenseModel(expense);
+    console.log(newExpense);
     return newExpense.save();
   }
 }

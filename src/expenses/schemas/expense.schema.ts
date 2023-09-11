@@ -5,30 +5,29 @@ import {
   IsEnum,
   IsOptional,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { SchemaFactory } from '@nestjs/mongoose';
+import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { ExpenseCategory } from '../dto';
 
 export class Expense {
-  @ApiProperty()
+  @Prop()
   @IsString()
   title: string;
 
-  @ApiProperty()
+  @Prop()
   @IsNumber()
   amount: number;
 
-  @ApiProperty({ default: new Date() })
+  @Prop({ default: new Date() })
   @IsDate()
   @IsOptional()
   date?: Date;
 
-  @ApiProperty()
+  @Prop()
   @IsString()
   @IsEnum(ExpenseCategory)
   category: string;
 
-  @ApiProperty()
+  @Prop()
   @IsOptional()
   @IsString()
   description?: string;

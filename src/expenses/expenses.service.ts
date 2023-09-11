@@ -1,13 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { ExpenseRepository } from './expenses.repository';
-import { CreateExpenseDto } from './dto';
 import { Expense } from './schemas/expense.schema';
 
 @Injectable()
 export class ExpensesService {
   constructor(private readonly expensesRepository: ExpenseRepository) {}
 
-  async createExpense(createExpenseDto: CreateExpenseDto): Promise<Expense> {
-    return this.expensesRepository.create(createExpenseDto);
+  async createExpense(
+    title: string,
+    amount: number,
+    date: Date,
+    category: string,
+    description: string,
+  ): Promise<Expense> {
+    const createdExpense = await this.expensesRepository.create({
+      title,
+      amount,
+      date,
+      category,
+      description,
+    });
+    return createdExpense;
+  }
+
+  async findAll(): Promise<Expense[]> {
+    return this.expensesRepository.findAll({});
   }
 }
