@@ -113,7 +113,8 @@ export class ExpensesController {
     );
     return updatedExpense;
   }
-
+  //get expenses by category + amount spent on it
+  @UseGuards(AuthGuard())
   @Get('category/:category')
   async getExpensesByCategory(
     @Param('category') category: string,
