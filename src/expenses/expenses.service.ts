@@ -146,4 +146,16 @@ export class ExpensesService {
     const totalAmount = expenses.reduce((acc, curr) => acc + curr.amount, 0);
     return totalAmount;
   }
+
+  async getTotalAmountForUserAndCategory(
+    userId: string,
+    category: string,
+  ): Promise<number> {
+    const expenses = await this.expensesRepository.findAll({
+      user: userId,
+      category,
+    });
+    const totalAmount = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+    return totalAmount;
+  }
 }
