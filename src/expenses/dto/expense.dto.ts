@@ -7,7 +7,7 @@ import {
   ValidateIf,
   IsEmpty,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 
 export enum ExpenseCategory {
   Food = 'Food',
@@ -44,3 +44,5 @@ export class CreateExpenseDto {
   @IsEmpty()
   user?: string;
 }
+
+export class UpdateExpenseDto extends PartialType(CreateExpenseDto) {}

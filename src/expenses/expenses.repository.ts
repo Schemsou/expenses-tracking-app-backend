@@ -34,4 +34,13 @@ export class ExpenseRepository {
   async delete(expenseFilterQuery: FilterQuery<Expense>): Promise<Expense> {
     return this.expenseModel.findOneAndDelete(expenseFilterQuery);
   }
+
+  async update(
+    expenseFilterQuery: FilterQuery<Expense>,
+    expense: Partial<Expense>,
+  ): Promise<Expense> {
+    return this.expenseModel.findOneAndUpdate(expenseFilterQuery, expense, {
+      new: true,
+    });
+  }
 }

@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateExpenseDto } from './dto';
 import { User } from 'src/auth/schemas/user.schema';
+import { Query } from 'express-serve-static-core';
 
 @Injectable()
 export class ExpensesService {
@@ -14,14 +15,26 @@ export class ExpensesService {
     private expenseModel: Model<Expense>,
   ) {}
 
+  private buildKeywordFilter(keyword?: string) {
+    return keyword
+      ? {
+          title: {
+            $regex: keyword,
+            $options: 'i',
+          },
+        }
+      : {};
+  }
+
   async createExpense(createExpenseDto: any, user: User): Promise<Expense> {
     const data = Object.assign(createExpenseDto, { user: user._id });
     const expense = this.expensesRepository.create(data);
     return expense;
   }
 
-  async findAll(): Promise<Expense[]> {
-    return this.expensesRepository.findAll({});
+  async findAll(query: Query): Promise<Expense[]> {
+    const keyword = this.buildKeywordFilter(query.keyword as string);
+    return this.expensesRepository.findAll({ ...keyword });
   }
 
   async getExpenseById(expenseId: string): Promise<Expense> {
@@ -38,8 +51,9 @@ export class ExpensesService {
     } catch {}
   }
 
-  async getExpensesByUserId(userId: string): Promise<Expense[]> {
-    return this.expensesRepository.findAll({ user: userId });
+  async getExpensesByUserId(userId: string, query: Query): Promise<Expense[]> {
+    const keyword = this.buildKeywordFilter(query.keyword as string);
+    return this.expensesRepository.findAll({ user: userId, ...keyword });
   }
 
   async getSumExpensesByUserId(userId: string): Promise<number> {
@@ -80,5 +94,27 @@ export class ExpensesService {
     }
 
     return totalExpensesByMonth;
+  }
+
+  async updateExpense(
+    expenseFilterQuery: Record<string, any>,
+    updatedExpenseData: Partial<Expense>,
+  ): Promise<Expense> {
+    try {
+      const updatedExpense = await this.expenseModel.findOneAndUpdate(
+        expenseFilterQuery,
+        updatedExpenseData,
+        {
+          new: true,
+        },
+      );
+
+      if (!updatedExpense) {
+        throw new Error('Expense not found');
+      }
+      return updatedExpense;
+    } catch (error) {
+      throw new Error(`Failed to update expense: ${error.message}`);
+    }
   }
 }

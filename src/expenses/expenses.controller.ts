@@ -4,7 +4,9 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -12,6 +14,7 @@ import { Expense } from './schemas/expense.schema';
 import { ExpensesService } from './expenses.service';
 import { CreateExpenseDto } from './dto/expense.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Query as ExpressQuery } from 'express-serve-static-core';
 
 @Controller('expenses')
 export class ExpensesController {
@@ -32,8 +35,8 @@ export class ExpensesController {
   }
   //Get all expenses
   @Get('all')
-  async getExpenses(): Promise<Expense[]> {
-    return this.expenseService.findAll();
+  async getExpenses(@Query() query: ExpressQuery): Promise<Expense[]> {
+    return this.expenseService.findAll(query);
   }
 
   //Getting one epxense by its id
@@ -55,8 +58,9 @@ export class ExpensesController {
   @Get('my-expenses/:userId')
   async getExpensesByUserId(
     @Param('userId') userId: string,
+    @Query('keyword') keyword: string,
   ): Promise<Expense[]> {
-    return this.expenseService.getExpensesByUserId(userId);
+    return this.expenseService.getExpensesByUserId(userId, { keyword });
   }
 
   //Getting the total expenses
@@ -94,5 +98,19 @@ export class ExpensesController {
     const currentYear = today.getFullYear();
 
     return this.expenseService.getTotalExpensesPerYear(userId, currentYear);
+  }
+
+  //Update Expense
+  @UseGuards(AuthGuard())
+  @Patch(':expenseId')
+  async updateExpense(
+    @Param('expenseId') expenseId: string,
+    @Body() updatedExpenseData: Partial<Expense>,
+  ): Promise<Expense> {
+    const updatedExpense = await this.expenseService.updateExpense(
+      { _id: expenseId },
+      updatedExpenseData,
+    );
+    return updatedExpense;
   }
 }
