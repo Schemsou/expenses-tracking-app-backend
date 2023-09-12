@@ -117,4 +117,33 @@ export class ExpensesService {
       throw new Error(`Failed to update expense: ${error.message}`);
     }
   }
+
+  async getExpensesByCategory(
+    category: string,
+    query: Query,
+  ): Promise<Expense[]> {
+    const keyword = this.buildKeywordFilter(query.keyword as string);
+    return this.expensesRepository.findAll({ category, ...keyword });
+  }
+
+  async getTotalAmountByCategory(): Promise<{ [category: string]: number }> {
+    const expenses = await this.expensesRepository.findAll({});
+    const categoryTotals: { [category: string]: number } = {};
+
+    for (const expense of expenses) {
+      const { category, amount } = expense;
+      if (!categoryTotals[category]) {
+        categoryTotals[category] = 0;
+      }
+      categoryTotals[category] += amount;
+    }
+
+    return categoryTotals;
+  }
+
+  async getTotalAmountForCategory(category: string): Promise<number> {
+    const expenses = await this.expensesRepository.findAll({ category });
+    const totalAmount = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+    return totalAmount;
+  }
 }

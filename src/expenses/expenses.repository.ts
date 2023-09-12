@@ -43,4 +43,8 @@ export class ExpenseRepository {
       new: true,
     });
   }
+
+  async findByCategory(category: string): Promise<Expense[]> {
+    return this.expenseModel.find({ category }).exec();
+  }
 }

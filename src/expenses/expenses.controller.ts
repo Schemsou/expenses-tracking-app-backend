@@ -113,4 +113,18 @@ export class ExpensesController {
     );
     return updatedExpense;
   }
+
+  @Get('category/:category')
+  async getExpensesByCategory(
+    @Param('category') category: string,
+    @Query() query: ExpressQuery,
+  ): Promise<{ expenses: Expense[]; totalAmount: number }> {
+    const expenses = await this.expenseService.getExpensesByCategory(
+      category,
+      query,
+    );
+    const totalAmount =
+      await this.expenseService.getTotalAmountForCategory(category);
+    return { expenses, totalAmount };
+  }
 }
