@@ -88,6 +88,7 @@ export class ExpensesController {
       currentMonth,
     );
   }
+
   //Getting for each month of the year
   @UseGuards(AuthGuard())
   @Get('year/:userId')
@@ -113,18 +114,19 @@ export class ExpensesController {
     );
     return updatedExpense;
   }
+
   //get expenses by category + amount spent on it
   @UseGuards(AuthGuard())
-  @Get('category/:category/:userId')
-  async getExpensesByCategoryForUser(
+  @Get('category/:category/user/:userId')
+  async getExpensesByCategoryAndUser(
     @Param('category') category: string,
     @Param('userId') userId: string,
-    @Query() query: ExpressQuery,
-  ): Promise<{ expenses: Expense[]; totalAmount: number }> {
-    const expenses = await this.expenseService.getExpensesByCategory(
-      category,
-      query,
-    );
+    @Query('keyword') keyword: string,
+  ): Promise<any> {
+    const expenses = await this.expenseService.getExpensesByUserId(userId, {
+      keyword,
+    });
+
     const totalAmount =
       await this.expenseService.getTotalAmountForUserAndCategory(
         userId,

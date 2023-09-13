@@ -118,12 +118,17 @@ export class ExpensesService {
     }
   }
 
-  async getExpensesByCategory(
+  async getExpensesByCategoryAndUser(
+    userId: string,
     category: string,
     query: Query,
   ): Promise<Expense[]> {
     const keyword = this.buildKeywordFilter(query.keyword as string);
-    return this.expensesRepository.findAll({ category, ...keyword });
+    return this.expensesRepository.findAll({
+      user: userId,
+      category,
+      ...keyword,
+    });
   }
 
   async getTotalAmountByCategory(): Promise<{ [category: string]: number }> {
