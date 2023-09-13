@@ -22,7 +22,6 @@ export class Expense extends Document {
   amount: number;
 
   @Prop({ default: new Date() })
-  @IsDate()
   @IsOptional()
   date?: Date;
 

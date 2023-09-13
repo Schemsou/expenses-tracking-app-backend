@@ -25,8 +25,6 @@ export class CreateExpenseDto {
   @IsNumber()
   amount: number;
 
-  @ApiProperty({ default: new Date() })
-  @IsDate()
   @IsOptional()
   date?: Date;
 
