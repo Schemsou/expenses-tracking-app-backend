@@ -34,7 +34,7 @@ export class ExpensesController {
     return createdExpense;
   }
   //Get all expenses
-  @Get('all')
+  @Get()
   async getExpenses(@Query() query: ExpressQuery): Promise<Expense[]> {
     return this.expenseService.findAll(query);
   }
@@ -117,7 +117,7 @@ export class ExpensesController {
 
   //get expenses by category + amount spent on it
   @UseGuards(AuthGuard())
-  @Get('category/:category/user/:userId')
+  @Get('categories/:category/users/:userId')
   async getExpensesByCategoryAndUser(
     @Param('category') category: string,
     @Param('userId') userId: string,
@@ -131,7 +131,6 @@ export class ExpensesController {
       category,
       userId,
     );
-    console.log(totalAmount);
 
     return { expenses, totalAmount };
   }

@@ -52,12 +52,6 @@ export class ExpenseRepository {
     category: string,
     userId: string,
   ): Promise<any> {
-    // console.log(category);
-    console.log({
-      category: category,
-      user: userId,
-    });
-    // 6501717f43cde31f65a013e6
     return this.expenseModel.aggregate([
       {
         $match: {
