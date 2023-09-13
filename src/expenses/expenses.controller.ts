@@ -127,11 +127,12 @@ export class ExpensesController {
       keyword,
     });
 
-    const totalAmount =
-      await this.expenseService.getTotalAmountForUserAndCategory(
-        userId,
-        category,
-      );
+    const totalAmount = await this.expenseService.getUserExpensesAggregate(
+      category,
+      userId,
+    );
+    console.log(totalAmount);
+
     return { expenses, totalAmount };
   }
 }

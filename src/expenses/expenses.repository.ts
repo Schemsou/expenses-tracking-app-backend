@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Expense } from './schemas/expense.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model } from 'mongoose';
+import mongoose, { FilterQuery, Model } from 'mongoose';
 
 @Injectable()
 export class ExpenseRepository {
@@ -46,5 +46,31 @@ export class ExpenseRepository {
 
   async findByCategory(category: string): Promise<Expense[]> {
     return this.expenseModel.find({ category }).exec();
+  }
+
+  async getUserExpensesAggregate(
+    category: string,
+    userId: string,
+  ): Promise<any> {
+    // console.log(category);
+    console.log({
+      category: category,
+      user: userId,
+    });
+    // 6501717f43cde31f65a013e6
+    return this.expenseModel.aggregate([
+      {
+        $match: {
+          category: category,
+          user: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $group: {
+          _id: '$category',
+          total: { $sum: '$amount' },
+        },
+      },
+    ]);
   }
 }
